@@ -200,7 +200,9 @@ html.js .reveal.in { opacity: 1; transform: none; }
 .wiz-steps .s { flex: 1; min-width: 60px; height: 6px; border-radius: 100px; background: var(--cp-surface-soft); border: 1px solid var(--cp-border); transition: background .3s; }
 .wiz-steps .s.done { background: var(--cp-accent); border-color: var(--cp-accent); }
 .wiz-q { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--cp-accent); margin-bottom: 8px; }
-.wiz-h { font-size: clamp(20px, 2.6vw, 30px); font-weight: 800; margin-bottom: 24px; line-height: 1.2; }
+.wiz-h { font-size: clamp(20px, 2.6vw, 30px); font-weight: 800; margin-bottom: 12px; line-height: 1.2; }
+.wiz-hint { font-size: 13.5px; color: var(--cp-text-muted); background: var(--cp-accent-soft); border-left: 3px solid var(--cp-accent); padding: 10px 14px; border-radius: 0 8px 8px 0; margin-bottom: 24px; line-height: 1.55; }
+.wiz-hint::before { content: "💡  "; }
 .wiz-opts { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
 @media (max-width: 720px){ .wiz-opts { grid-template-columns: 1fr; } }
 .opt {
@@ -210,8 +212,9 @@ html.js .reveal.in { opacity: 1; transform: none; }
 }
 .opt:hover { border-color: var(--cp-accent); background: var(--cp-accent-soft); transform: translateY(-2px); }
 .opt .ic { width: 38px; height: 38px; border-radius: 10px; background: var(--cp-accent-soft); color: var(--cp-accent); display: grid; place-items: center; flex-shrink: 0; }
-.opt .ot { font-weight: 700; font-size: 15.5px; margin-bottom: 3px; }
-.opt .od { font-size: 12.5px; color: var(--cp-text-muted); line-height: 1.4; }
+.opt .ot { font-weight: 700; font-size: 15.5px; margin-bottom: 3px; line-height: 1.35; }
+.opt .od { font-size: 12.5px; color: var(--cp-text-muted); line-height: 1.45; }
+.opt .letter { flex-shrink: 0; width: 32px; height: 32px; border-radius: 8px; background: var(--cp-accent); color: var(--cp-accent-fg); display: grid; place-items: center; font-weight: 800; font-size: 14px; }
 .wiz-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
 .wiz-back { font-family: inherit; background: none; border: none; color: var(--cp-text-muted); cursor: pointer; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; padding: 8px; border-radius: 8px; }
 .wiz-back:hover { color: var(--cp-text); } .wiz-back:disabled { opacity: .3; cursor: default; }
@@ -232,6 +235,25 @@ html.js .reveal.in { opacity: 1; transform: none; }
 .res-box ul { list-style: none; display: grid; gap: 9px; }
 .res-box li { font-size: 14px; padding-left: 22px; position: relative; }
 .res-box li::before { content: ""; position: absolute; left: 4px; top: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--cp-accent); }
+
+/* wizard score bars */
+.score-bars { display: grid; gap: 10px; margin: 20px 0 26px; }
+.score-row { display: grid; grid-template-columns: 180px 1fr 60px; gap: 12px; align-items: center; font-size: 13.5px; }
+.score-row .nm { font-weight: 700; color: var(--cp-text); }
+.score-row .track { height: 12px; background: var(--cp-surface-soft); border: 1px solid var(--cp-border); border-radius: 100px; overflow: hidden; }
+.score-row .fill { height: 100%; border-radius: 100px; transition: width .7s cubic-bezier(.2,.7,.2,1); }
+.score-row.win .nm { color: var(--cp-accent); }
+.score-row.win .fill { background: var(--cp-accent); }
+.score-row .val { font-family: "SF Mono", Consolas, monospace; font-weight: 700; font-size: 13px; color: var(--cp-text-muted); text-align: right; }
+.score-row.win .val { color: var(--cp-accent); }
+@media (max-width: 600px) { .score-row { grid-template-columns: 130px 1fr 44px; font-size: 12px; } }
+
+/* reasons list — highlighted paragraph list */
+.res-reasons { display: grid; gap: 10px; margin: 18px 0 24px; }
+.res-reasons li { list-style: none; padding: 12px 16px 12px 46px; background: var(--cp-bg-elevated); border: 1px solid var(--cp-border); border-radius: 12px; font-size: 14px; line-height: 1.6; color: var(--cp-text); position: relative; }
+.res-reasons li::before { content: counter(reason); counter-increment: reason; position: absolute; left: 14px; top: 14px; width: 22px; height: 22px; border-radius: 50%; background: var(--cp-accent-soft); color: var(--cp-accent); font-size: 12px; font-weight: 800; display: grid; place-items: center; }
+.res-reasons { counter-reset: reason; }
+.res-reasons li b, .res-reasons li strong { color: var(--cp-accent); font-weight: 800; }
 
 /* ---------- flow / chevrons ---------- */
 .flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; margin-top: 24px; }
@@ -521,12 +543,13 @@ footer { padding: 40px; text-align: center; font-size: 12.5px; color: var(--cp-t
   <div class="wrap">
     <span class="kicker reveal">01 · Interactive Decision</span>
     <h2 class="title reveal d1">어떤 데이터 플랫폼을 제안해야 하는가?</h2>
-    <p class="lead reveal d2">플랫폼 선택은 '기능 비교'가 아니라 <b>고객의 분석 중심축 + AI 야망</b>으로 결정됩니다. 네 가지 질문에 답하면 추천 플랫폼과 다음 단계를 안내합니다.</p>
+    <p class="lead reveal d2">플랫폼 선택은 '기능 비교'가 아니라 <b>고객이 얻고자 하는 가치 · 페르소나 · 워크로드 · 과금 · 거버넌스</b> 다섯 축으로 결정됩니다. 다섯 질문에 답하면 F(Fabric) · D(Databricks) · S(Snowflake) 점수와 함께 추천 플랫폼과 실행 다음 단계를 안내합니다.</p>
     <div class="wizard reveal d3">
       <div class="wiz-steps" id="wizSteps"></div>
       <div id="wizBody">
-        <div class="wiz-q" id="wizQNo">QUESTION 1 / 4</div>
+        <div class="wiz-q" id="wizQNo">QUESTION 1 / 5</div>
         <div class="wiz-h" id="wizH"></div>
+        <div class="wiz-hint" id="wizHint"></div>
         <div class="wiz-opts" id="wizOpts"></div>
       </div>
       <div class="result" id="wizResult"></div>
@@ -962,53 +985,198 @@ const io = new IntersectionObserver((entries) => {
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-// ---------- DECISION WIZARD ----------
+// ---------- DECISION WIZARD (F/D/S scoring model — from ATS Playbook Decision Tree) ----------
 const QS = [
-  { q: '고객의 주(主) 분석 중심축은?', opts: [
-    { t: 'Power BI · M365 중심', d: '비즈니스 셀프서비스 분석이 핵심', ic: '📊', s: { fab: 3 } },
-    { t: '대규모 ML/AI · 데이터 엔지니어링', d: '오픈 레이크하우스, 고급 AI 중심', ic: '🧠', s: { dbx: 3 } },
-    { t: '전사 BI + 고급 AI 둘 다', d: '비즈니스와 데이터팀이 모두 추진', ic: '🤝', s: { fab: 1, dbx: 1, both: 2 } },
-    { t: '이미 GCP / 멀티클라우드 DW 표준', d: 'BigQuery·Snowflake 가 현 표준', ic: '☁️', s: { compete: 3 } },
-  ]},
-  { q: 'AI 를 추진하는 조직은 어디인가?', opts: [
-    { t: '비즈니스 부서 주도', d: '현업이 Copilot·셀프서비스를 원함', ic: '💼', s: { fab: 2 } },
-    { t: '데이터 / ML 엔지니어링 팀', d: '모델·파이프라인 중심 추진', ic: '⚙️', s: { dbx: 2 } },
-    { t: '전사 공동 (CoE)', d: '비즈니스+데이터 협업 거버넌스', ic: '🏛️', s: { both: 2 } },
-  ]},
-  { q: '데이터 거버넌스 · 보안 요구 수준은?', opts: [
-    { t: '매우 높음 — 규제 / 폐쇄망', d: 'Private Link·Purview 필수', ic: '🔒', s: { fab: 2, both: 1 } },
-    { t: '표준 수준', d: '일반적인 엔터프라이즈 거버넌스', ic: '🛡️', s: { fab: 1, dbx: 1 } },
-    { t: '오픈 / 멀티클라우드 거버넌스', d: 'Unity Catalog 기반 통합 선호', ic: '🌐', s: { dbx: 2 } },
-  ]},
-  { q: 'Agentic AI 도입 단계는?', opts: [
-    { t: '적극 추진 중', d: 'Agent·Copilot 즉시 확장 목표', ic: '🚀', s: { both: 2, fab: 1 } },
-    { t: '검토 / 파일럿 단계', d: 'Foundry·Copilot 로드맵 수립', ic: '🧭', s: { fab: 1, dbx: 1 } },
-    { t: '아직 없음 — 토대부터', d: '데이터·거버넌스 우선 정비', ic: '🏗️', s: { dbx: 1, fab: 1 } },
-  ]},
+  {
+    q: '이 고객이 다음 데이터 플랫폼에서 얻고자 하는 핵심 가치는?',
+    hint: '"어떤 클라우드에 있느냐"가 아니라 "현업이 무엇을 하고 싶은가"가 플랫폼 방향을 정합니다.',
+    opts: [
+      { t: '수집 → 분석 → BI → Agent → 업무 실행을 한 흐름으로 잇는 End-to-End UX',
+        d: '데이터팀·현업이 툴을 오가지 않고 한 플랫폼에서 인사이트를 업무 실행까지 연결',
+        s: { F: 3, D: 0, S: 0 } },
+      { t: '대규모 AI/ML 파이프라인 · 데이터 엔지니어링이 최우선 과제',
+        d: 'Spark 기반 대규모 처리, MLOps, GenAI/Agent 학습·서빙이 향후 2년 로드맵의 중심',
+        s: { D: 3, F: 1, S: 0 } },
+      { t: '계열사 · 파트너 · 글로벌 리전 간 데이터 공유와 워크로드 격리',
+        d: '각 조직이 독립된 warehouse로 소비, 데이터를 복제하지 않고 공유·정산',
+        s: { S: 3, F: 1, D: 1 } },
+      { t: '현재 AWS/GCP 위에 warehouse · notebook · BI가 파편화 — TCO/거버넌스 통합 필요',
+        d: 'Redshift · Athena · BigQuery · QuickSight · Looker가 섞여 청구서·데이터 사본이 계속 증가',
+        s: { F: 2, D: 2, S: 1 } },
+    ]
+  },
+  {
+    q: '데이터 플랫폼의 주 사용자(페르소나)는 누구인가?',
+    hint: '누가 매일 이 플랫폼에 로그인해서 가치를 만들어낼지가 아키텍처 방향을 정합니다.',
+    opts: [
+      { t: '비즈니스 사용자 · 경영진 (Self-service BI, Copilot)',
+        d: 'Power BI 리포트 · 자연어 질의 · 업무 에이전트가 핵심',
+        s: { F: 3, D: 0, S: 1 } },
+      { t: '데이터 엔지니어 · 데이터 사이언티스트 중심',
+        d: '노트북 · Spark · MLflow · Feature Store를 매일 사용',
+        s: { D: 3, F: 1, S: 0 } },
+      { t: 'SQL 분석가 · DW 팀 (거버넌스된 warehouse 필요)',
+        d: '워크로드 격리와 명확한 팀별 컴퓨트 분리 요구',
+        s: { S: 3, F: 1, D: 1 } },
+      { t: 'AWS Redshift · QuickSight · Athena 파편화 조합에 지쳐 통합을 원함',
+        d: '여러 콘솔 · 별도 청구서 · 수작업 파이프라인 유지가 부담',
+        s: { F: 3, D: 2, S: 1 } },
+    ]
+  },
+  {
+    q: '고객의 핵심 워크로드 성격은?',
+    hint: '지배적 워크로드 하나가 실제 도입 후 90% 소비를 만듭니다.',
+    opts: [
+      { t: 'BI · 리포팅 · 데이터에서 업무 실행까지 연결 (Agent 시나리오 포함)',
+        d: 'Semantic model · Direct Lake로 현업이 바로 소비, 인사이트가 워크플로 액션으로 이어짐',
+        s: { F: 3, D: 1, S: 0 } },
+      { t: '대규모 ML 모델 학습 · Real-time inference · MLOps',
+        d: 'GPU 클러스터 · Vector Search · Model Serving 요구',
+        s: { D: 3, F: 1, S: 0 } },
+      { t: 'Cross-org 데이터 공유 · 워크로드 격리 · 파트너 협업',
+        d: '각 팀 · 파트너사가 독립된 warehouse로 소비, 데이터 마켓플레이스 유즈케이스',
+        s: { S: 3, D: 1, F: 1 } },
+      { t: '서버리스 SQL 스캔 기반 웨어하우스를 쓰지만 월 청구서 서프라이즈가 잦음',
+        d: '쿼리 · 스캔량이 튀는 순간 비용 폭발, 사전 slot 예약 없이 재무 예측 어려움',
+        s: { S: 2, F: 2, D: 1 } },
+    ]
+  },
+  {
+    q: '예산 · 과금 모델에 대한 선호는?',
+    hint: '재무팀이 사인오프할 수 있는 청구 예측 가능성이 결정적입니다.',
+    opts: [
+      { t: '예측 가능한 SaaS 정액 (Capacity Unit, 단일 청구서)',
+        d: 'EA/MCA 할인 반영, 조직 공용 컴퓨트 풀로 효율화',
+        s: { F: 3, D: 0, S: 1 } },
+      { t: '워크로드별 소비 기반 (auto-suspend로 유휴 최소화)',
+        d: 'Warehouse 크기 · 정지 자유롭게 조절, 팀별 청구 분리',
+        s: { S: 3, F: 1, D: 1 } },
+      { t: 'ML 이코노믹스 최적화 (Photon · Spot · 오픈 포맷)',
+        d: 'DBU + Azure Infra, Spot 인스턴스로 학습 비용 절감',
+        s: { D: 3, S: 0, F: 1 } },
+      { t: 'AWS Redshift처럼 노드-시간 과금이라 유휴 비용이 계속 발생',
+        d: '쓰지 않는 시간에도 청구되는 구조가 CFO 리뷰에서 계속 지적됨',
+        s: { S: 2, F: 2, D: 1 } },
+    ]
+  },
+  {
+    q: '거버넌스 · AI 확장성 우선순위는?',
+    hint: 'GA 이후 24개월의 AI · 거버넌스 로드맵이 오늘의 플랫폼 선택을 결정합니다.',
+    opts: [
+      { t: 'M365 · Purview · Copilot Studio와 원-스톱 거버넌스 · AI',
+        d: 'Sensitivity label · DLP · Agent가 데이터와 같은 layer에서 동작',
+        s: { F: 3, D: 1, S: 0 } },
+      { t: 'Unity Catalog · Mosaic AI · Vector Search · MLflow',
+        d: '오픈 lakehouse 위에서 모델 · 피처 · 에이전트 라이프사이클 통합',
+        s: { D: 3, S: 0, F: 1 } },
+      { t: 'Row/column masking · 데이터 공유 · 워크로드별 IAM 격리',
+        d: '규제산업(금융·헬스케어) 컴플라이언스와 파트너 공유가 핵심',
+        s: { S: 3, F: 1, D: 1 } },
+      { t: 'Google Vertex · BigQuery ML 종속에서 벗어나 open · portable 대안 필요',
+        d: '모델 · 데이터가 특정 클라우드에 묶여 규제 · 조달 리뷰가 어려움',
+        s: { D: 2, S: 2, F: 1 } },
+    ]
+  },
 ];
+
 const RESULTS = {
-  fab: { name: 'Microsoft Fabric', color: 'var(--fabric)',
-    rationale: 'Power BI·M365 중심으로 전사가 셀프서비스 분석과 Copilot 을 즉시 활용하려는 고객에게 최적입니다. SaaS 통합·OneLake·Direct Lake·M365 Copilot 이 핵심 가치입니다.',
-    why: ['준비 즉시(Ready-to-use) SaaS 통합','OneLake 단일 거버넌스 + Direct Lake','M365 Copilot 네이티브 통합','Purview 로 거버넌스·보안 일원화'],
-    next: ['Fabric 용량(F-SKU) 사이징 워크숍','OneLake + Direct Lake PoC','경쟁 DW 는 Mirroring 으로 연결','초대규모 ML 은 Databricks 병행 검토'] },
-  dbx: { name: 'Azure Databricks', color: 'var(--dbx)',
-    rationale: '대규모 ML/AI·데이터 엔지니어링·오픈 레이크하우스·멀티클라우드가 핵심인 고객에게 최적입니다. Spark/Photon·Delta·Unity Catalog·Mosaic AI 가 강점입니다.',
-    why: ['Spark·Photon 고성능 + 스트리밍/배치 단일 엔진','Delta Lake 오픈 포맷 — 벤더 종속 회피','Unity Catalog 멀티클라우드 거버넌스','Mosaic AI·MLflow 로 MLOps 성숙'],
-    next: ['Lakehouse(Bronze→Gold) 설계 워크숍','MLflow · Feature Store PoC','전사 BI·Copilot 은 Fabric 결합 제안','클러스터 비용·거버넌스 운영 모델 수립'] },
-  both: { name: 'Fabric + Databricks (Better Together)', color: 'var(--cp-accent)',
-    rationale: '전사 BI 와 고급 AI 를 모두 추구하는 고객에게는 선택이 아니라 설계가 답입니다. OneLake(Shortcut·Mirroring)로 두 엔진을 하나의 거버넌스 도메인에서 함께 사용합니다.',
-    why: ['Databricks=엔지니어링·ML / Fabric=BI·Copilot','OneLake 로 무복제 데이터 공유','단일 거버넌스(Purview·Unity Catalog)','Azure AI Foundry 로 Agent 확장'],
-    next: ['Better Together 참조 아키텍처 매핑','OneLake Shortcut/Mirroring 설계','공통 거버넌스 도메인 정의','Agent Factory 로드맵 수립'] },
-  compete: { name: '경쟁 대응 — Connect, Don\u2019t Replace', color: 'var(--bq)',
-    rationale: 'GCP/멀티클라우드 DW(BigQuery·Snowflake)가 이미 표준이라면 정면 대체가 아니라 연결·공존 전략이 효과적입니다. 있는 곳의 데이터를 Fabric 으로 활용하고 Microsoft 가치를 더하세요.',
-    why: ['Fabric Mirroring 으로 무복제 연결','M365 Copilot·E2E 통합 차별화','Purview 거버넌스·Private Link 보안','데이터 이동 없이 가치 확장'],
-    next: ['BigQuery/Snowflake → Fabric Mirroring PoC','Power BI Direct Lake 리포팅 데모','Copilot 업무 시나리오 발굴','단계적 워크로드 전환 로드맵'] },
+  F: {
+    key: 'F',
+    name: 'Microsoft Fabric',
+    tag: 'End-to-end SaaS 분석 플랫폼 · Power BI · M365 · Copilot과 하나로',
+    color: 'var(--fabric)',
+    reasons: [
+      '<b>단일 SaaS · 단일 청구</b> — Capacity Unit(F2~F2048)으로 재무팀이 예측 가능한 예산 승인.',
+      '<b>M365 · Power BI · Copilot과 즉시 통합</b> — Semantic model · Direct Lake · 업무 에이전트가 데이터 옆에서 바로 동작.',
+      '<b>OneLake</b>가 조직의 데이터 SoR — 팀별 사일로와 별도 스토리지 이동 없이 공유.',
+      '타 하이퍼스케일러의 SQL 서버리스 옵션은 "싸 보이지만" slot 예약 · 쿼리 스캔 비용이 매달 널뛰어 재무 예측이 어렵다는 것이 실제 고객 피드백.',
+    ],
+    strengths: [
+      '가장 예측 가능한 예산 (Capacity 정액)',
+      'EA/MCA 할인 및 통합 조달',
+      'Power BI Premium 대체 & 확장',
+      'Copilot · Agent 시나리오 즉시 활성화',
+    ],
+    watchouts: [
+      '소규모(F2 이하) 배포는 상대적으로 고비용 체감',
+      '대량 버스트는 Capacity sizing 필요',
+      '고급 ML은 Databricks와 병행 검토',
+    ],
+    next: [
+      'Fabric Capacity SKU sizing 워크숍 제안 (F64 기준 baseline)',
+      '기존 Power BI Premium → Fabric F SKU 전환 ROI 시뮬레이션',
+      'Copilot in Fabric / Agent 유즈케이스 2~3개 pilot 스코프 정의',
+      'M365 E5 + Fabric 번들 조달 옵션(EA/MCA) 재무팀과 리뷰',
+    ],
+  },
+  D: {
+    key: 'D',
+    name: 'Azure Databricks',
+    tag: 'Lakehouse + Mosaic AI · 대규모 데이터 엔지니어링과 AI를 위한 선택',
+    color: 'var(--dbx)',
+    reasons: [
+      '<b>Open Lakehouse (Delta + Spark)</b> — 고객 소유 Azure 스토리지 위에서 동작해 데이터 이식성 유지.',
+      '<b>Unity Catalog + Mosaic AI</b>로 데이터 · 모델 · 피처 · 에이전트를 단일 거버넌스로 관리.',
+      'Photon · Spot · 자동 스케일로 <b>ML 이코노믹스</b> 최적화, Petabyte 급 처리에도 유리.',
+      '타 클라우드의 매니지드 Spark · DW는 오픈 Delta · Unity Catalog 수준의 통합 거버넌스가 부재하여 프로덕션 ML 확장 시 재구축 비용이 큼.',
+    ],
+    strengths: [
+      'AI/ML 워크로드에서 압도적 경제성',
+      'Photon으로 SQL 성능 상향',
+      'Open format(Delta) — 벤더 종속 최소',
+      'Streaming + Batch 통합',
+    ],
+    watchouts: [
+      '클러스터 sizing · autoscaling에 따라 비용 편차',
+      'Databricks + Azure Infra 두 청구서',
+      '비즈니스 유저 self-service는 Fabric과 병행 권장',
+    ],
+    next: [
+      'Databricks + Azure MACC 조달 스코프 확정',
+      '우선 워크로드(Feature Engineering / GenAI / ETL 현대화) POC 설계',
+      'Unity Catalog + Purview 연동 거버넌스 아키텍처 리뷰',
+      'Mosaic AI Model Serving · Vector Search로 첫 GenAI 유즈케이스 pilot',
+    ],
+  },
+  S: {
+    key: 'S',
+    name: 'Snowflake on Azure',
+    tag: 'Multi-cloud 이식성 · 워크로드 격리 · Cross-org 데이터 공유',
+    color: 'var(--snow)',
+    reasons: [
+      '<b>3-layer 아키텍처</b>로 팀 · 워크로드별 warehouse 완전 격리, auto-suspend로 유휴 비용 최소화.',
+      '<b>Cross-cloud / Cross-company 데이터 공유</b>가 표준 기능 — 파트너 · 자회사 협업 시나리오에 적합.',
+      '<b>Azure Marketplace 조달</b>로 MACC 상계 가능, 하나의 Azure 청구서로 통합.',
+      'AWS Redshift처럼 노드-시간 기반 warehouse는 사용하지 않아도 계속 과금되고, BigQuery처럼 스캔 기반은 월 청구서가 예측 불가한 반면, Snowflake credit + auto-suspend 조합이 재무 통제에 유리.',
+    ],
+    strengths: [
+      '명확한 워크로드별 비용 가시성',
+      'Auto-suspend · Warehouse 사이즈 자유',
+      '멀티클라우드 이식성',
+      'Marketplace / Data sharing 성숙',
+    ],
+    watchouts: [
+      'ML 워크로드는 Databricks 대비 고비용',
+      '유휴 warehouse 미정지 시 credit 소모',
+      'Copilot / M365 통합은 Fabric에 비해 제한',
+    ],
+    next: [
+      'Azure Marketplace 경유 Snowflake private offer 견적 요청 (MACC 상계)',
+      '고객의 상위 3개 warehouse workload → 사이즈 · auto-suspend 정책 설계',
+      'Purview + Snowflake 거버넌스 통합 아키텍처 검토',
+      'Cross-org data sharing 유즈케이스(공급망 · 파트너 · 자회사) pilot 스코프',
+    ],
+  },
 };
+const PLATFORM_LABELS = { F: 'Microsoft Fabric', D: 'Azure Databricks', S: 'Snowflake on Azure' };
+const PLATFORM_COLORS = { F: 'var(--fabric)', D: 'var(--dbx)', S: 'var(--snow)' };
+const LETTERS = ['A', 'B', 'C', 'D'];
 
 let step = 0; const answers = [];
 const stepsEl = document.getElementById('wizSteps');
 const optsEl = document.getElementById('wizOpts');
 const hEl = document.getElementById('wizH');
+const hintEl = document.getElementById('wizHint');
 const qnoEl = document.getElementById('wizQNo');
 const countEl = document.getElementById('wizCount');
 const backEl = document.getElementById('wizBack');
@@ -1016,54 +1184,126 @@ const bodyEl = document.getElementById('wizBody');
 const resEl = document.getElementById('wizResult');
 
 QS.forEach(() => { const d = document.createElement('div'); d.className = 's'; stepsEl.appendChild(d); });
+
 function renderStep(){
   bodyEl.style.display = 'block'; resEl.classList.remove('show');
   const cur = QS[step];
   qnoEl.textContent = 'QUESTION ' + (step + 1) + ' / ' + QS.length;
   hEl.textContent = cur.q;
+  hintEl.textContent = cur.hint;
   countEl.textContent = (step + 1) + ' / ' + QS.length;
   backEl.disabled = step === 0;
   Array.from(stepsEl.children).forEach((s, i) => s.classList.toggle('done', i <= step));
   optsEl.innerHTML = '';
-  cur.opts.forEach((o) => {
+  cur.opts.forEach((o, i) => {
     const b = document.createElement('button');
     b.className = 'opt';
-    const ic = document.createElement('span'); ic.className = 'ic'; ic.textContent = o.ic;
+    const letter = document.createElement('span'); letter.className = 'letter'; letter.textContent = LETTERS[i];
     const wrap = document.createElement('div');
     const t = document.createElement('div'); t.className = 'ot'; t.textContent = o.t;
     const d = document.createElement('div'); d.className = 'od'; d.textContent = o.d;
     wrap.appendChild(t); wrap.appendChild(d);
-    b.appendChild(ic); b.appendChild(wrap);
-    b.addEventListener('click', () => { answers[step] = o.s; if (step < QS.length - 1){ step++; renderStep(); } else { showResult(); } });
+    b.appendChild(letter); b.appendChild(wrap);
+    b.addEventListener('click', () => {
+      answers[step] = { idx: i, s: o.s };
+      if (step < QS.length - 1) { step++; renderStep(); }
+      else { showResult(); }
+    });
     optsEl.appendChild(b);
   });
 }
+
+function computeTotals() {
+  const totals = { F: 0, D: 0, S: 0 };
+  answers.forEach(a => {
+    if (!a) return;
+    for (const k of Object.keys(totals)) totals[k] += (a.s[k] || 0);
+  });
+  // Tie-break priority: F > D > S (Fabric first as MS strategic default)
+  const priority = ['F', 'D', 'S'];
+  let winner = 'F', best = -1;
+  priority.forEach(k => { if (totals[k] > best) { best = totals[k]; winner = k; } });
+  return { winner, totals };
+}
+
 function showResult(){
-  const tally = { fab: 0, dbx: 0, both: 0, compete: 0 };
-  answers.forEach(s => { for (const k in s) tally[k] += s[k]; });
-  // Better Together if fab & dbx are both strong and close
-  let key;
-  if (tally.compete >= 3) key = 'compete';
-  else if (tally.both >= 4 || (tally.fab >= 2 && tally.dbx >= 2 && Math.abs(tally.fab - tally.dbx) <= 1)) key = 'both';
-  else key = (tally.fab >= tally.dbx) ? 'fab' : 'dbx';
-  const r = RESULTS[key];
+  const { winner, totals } = computeTotals();
+  const r = RESULTS[winner];
   Array.from(stepsEl.children).forEach(s => s.classList.add('done'));
   bodyEl.style.display = 'none';
   resEl.innerHTML = '';
+
+  // badge
   const badge = document.createElement('div'); badge.className = 'res-badge';
   badge.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg> 추천 결과';
+  resEl.appendChild(badge);
+
+  // head
   const head = document.createElement('div'); head.className = 'res-head';
-  const tg = document.createElement('span'); tg.className = 'tag-platform'; tg.style.background = r.color; tg.textContent = 'RECOMMENDED';
   const tt = document.createElement('div'); tt.className = 'res-title'; tt.textContent = r.name; tt.style.color = r.color;
+  const tg = document.createElement('span'); tg.className = 'tag-platform'; tg.style.background = r.color; tg.textContent = 'RECOMMENDED';
   head.appendChild(tt); head.appendChild(tg);
-  const ra = document.createElement('p'); ra.className = 'res-rationale'; ra.textContent = r.rationale;
+  resEl.appendChild(head);
+
+  const tagP = document.createElement('p'); tagP.className = 'res-rationale'; tagP.textContent = r.tag;
+  resEl.appendChild(tagP);
+
+  // score bars
+  const max = Math.max(totals.F, totals.D, totals.S, 1);
+  const bars = document.createElement('div'); bars.className = 'score-bars';
+  ['F','D','S'].forEach(k => {
+    const row = document.createElement('div'); row.className = 'score-row' + (k === winner ? ' win' : '');
+    const nm = document.createElement('div'); nm.className = 'nm'; nm.textContent = PLATFORM_LABELS[k];
+    const track = document.createElement('div'); track.className = 'track';
+    const fill = document.createElement('div'); fill.className = 'fill';
+    fill.style.width = Math.round((totals[k] / max) * 100) + '%';
+    fill.style.background = k === winner ? '' : PLATFORM_COLORS[k];
+    fill.style.opacity = k === winner ? '1' : '0.55';
+    track.appendChild(fill);
+    const val = document.createElement('div'); val.className = 'val'; val.textContent = totals[k] + ' pt';
+    row.appendChild(nm); row.appendChild(track); row.appendChild(val);
+    bars.appendChild(row);
+  });
+  resEl.appendChild(bars);
+
+  // reasons (numbered highlighted list)
+  const reasonsHdr = document.createElement('h4');
+  reasonsHdr.style.cssText = 'font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--cp-text-soft);margin:8px 0 10px;';
+  reasonsHdr.textContent = '왜 이 플랫폼인가';
+  resEl.appendChild(reasonsHdr);
+  const reasonsUl = document.createElement('ul'); reasonsUl.className = 'res-reasons';
+  r.reasons.forEach(html => { const li = document.createElement('li'); li.innerHTML = html; reasonsUl.appendChild(li); });
+  resEl.appendChild(reasonsUl);
+
+  // three-column detail
   const cols = document.createElement('div'); cols.className = 'res-cols';
-  const mk = (title, arr) => { const box = document.createElement('div'); box.className = 'res-box'; const h = document.createElement('h4'); h.textContent = title; const ul = document.createElement('ul'); arr.forEach(x => { const li = document.createElement('li'); li.textContent = x; ul.appendChild(li); }); box.appendChild(h); box.appendChild(ul); return box; };
-  cols.appendChild(mk('왜 이 플랫폼인가', r.why));
+  cols.style.gridTemplateColumns = '1fr 1fr 1fr';
+  const mk = (title, arr) => {
+    const box = document.createElement('div'); box.className = 'res-box';
+    const h = document.createElement('h4'); h.textContent = title;
+    const ul = document.createElement('ul'); arr.forEach(x => { const li = document.createElement('li'); li.textContent = x; ul.appendChild(li); });
+    box.appendChild(h); box.appendChild(ul); return box;
+  };
+  cols.appendChild(mk('핵심 강점', r.strengths));
+  cols.appendChild(mk('유의 사항 (Watch-outs)', r.watchouts));
   cols.appendChild(mk('다음 단계 (Next Steps)', r.next));
+  resEl.appendChild(cols);
+
+  // action row
+  const actions = document.createElement('div');
+  actions.style.cssText = 'display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;';
   const restart = document.createElement('button'); restart.className = 'btn ghost'; restart.textContent = '다시 진단하기';
-  restart.addEventListener('click', () => { step = 0; answers.length = 0; Array.from(stepsEl.children).forEach(s => s.classList.remove('done')); renderStep(); resEl.classList.remove('show'); });
-  resEl.appendChild(badge); resEl.appendChild(head); resEl.appendChild(ra); resEl.appendChild(cols); resEl.appendChild(restart);
+  restart.addEventListener('click', () => {
+    step = 0; answers.length = 0;
+    Array.from(stepsEl.children).forEach(s => s.classList.remove('done'));
+    renderStep(); resEl.classList.remove('show');
+    document.getElementById('wizard-sec').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  const share = document.createElement('a'); share.className = 'btn'; share.href = '#patterns';
+  share.innerHTML = '참조 아키텍처 보기 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  actions.appendChild(share); actions.appendChild(restart);
+  resEl.appendChild(actions);
+
   resEl.classList.add('show');
   countEl.textContent = '완료';
 }
