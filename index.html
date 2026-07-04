@@ -1000,7 +1000,7 @@ const QS = [
       { t: '계열사 · 파트너 · 글로벌 리전 간 데이터 공유와 워크로드 격리',
         d: '각 조직이 독립된 warehouse로 소비, 데이터를 복제하지 않고 공유·정산',
         s: { S: 3, F: 1, D: 1 } },
-      { t: '현재 AWS/GCP 위에 warehouse · notebook · BI가 파편화 — TCO/거버넌스 통합 필요',
+      { t: '데이터 · 분석 · AI 환경이 여러 플랫폼으로 분산되어 있으며, 통합 및 표준화를 검토 중',
         d: 'Redshift · Athena · BigQuery · QuickSight · Looker가 섞여 청구서·데이터 사본이 계속 증가',
         s: { F: 2, D: 2, S: 1 } },
     ]
@@ -1018,7 +1018,7 @@ const QS = [
       { t: 'SQL 분석가 · DW 팀 (거버넌스된 warehouse 필요)',
         d: '워크로드 격리와 명확한 팀별 컴퓨트 분리 요구',
         s: { S: 3, F: 1, D: 1 } },
-      { t: 'AWS Redshift · QuickSight · Athena 파편화 조합에 지쳐 통합을 원함',
+      { t: '데이터 · 분석 · AI 플랫폼을 통합하여 운영 효율성과 거버넌스 강화',
         d: '여러 콘솔 · 별도 청구서 · 수작업 파이프라인 유지가 부담',
         s: { F: 3, D: 2, S: 1 } },
     ]
@@ -1063,8 +1063,8 @@ const QS = [
     q: '거버넌스 · AI 확장성 우선순위는?',
     hint: 'GA 이후 24개월의 AI · 거버넌스 로드맵이 오늘의 플랫폼 선택을 결정합니다.',
     opts: [
-      { t: 'M365 · Purview · Copilot Studio와 원-스톱 거버넌스 · AI',
-        d: 'Sensitivity label · DLP · Agent가 데이터와 같은 layer에서 동작',
+      { t: '통합 데이터 자산 · 정책 기반 거버넌스 · AI 활용 기반',
+        d: 'OneLake 중심으로 분산 데이터를 연결하고, 권한 · 정책 · 계보 관리 기반으로 신뢰 가능한 AI 데이터 기반 제공',
         s: { F: 3, D: 1, S: 0 } },
       { t: 'Unity Catalog · Mosaic AI · Vector Search · MLflow',
         d: '오픈 lakehouse 위에서 모델 · 피처 · 에이전트 라이프사이클 통합',
@@ -1072,8 +1072,8 @@ const QS = [
       { t: 'Row/column masking · 데이터 공유 · 워크로드별 IAM 격리',
         d: '규제산업(금융·헬스케어) 컴플라이언스와 파트너 공유가 핵심',
         s: { S: 3, F: 1, D: 1 } },
-      { t: 'Google Vertex · BigQuery ML 종속에서 벗어나 open · portable 대안 필요',
-        d: '모델 · 데이터가 특정 클라우드에 묶여 규제 · 조달 리뷰가 어려움',
+      { t: '클라우드 종속성 완화 · 데이터 공유 · Azure AI 확장',
+        d: '특정 클라우드 종속성을 낮추어 데이터 운영 모델을 확보',
         s: { D: 2, S: 2, F: 1 } },
     ]
   },
