@@ -16,3 +16,5 @@ Content (Korean):
 - Scout metadata card
 
 Audience: ATS · CSA · Data & AI Specialist
+
+<!-- rebuild trigger -->
